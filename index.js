@@ -20,36 +20,45 @@ function retornarUltimoId() {
 
 //Función para añadir una nueva tarea a la lista(array)
 function agregarTarea(nombre) {
-  let tareaNueva = {
-    id: retornarUltimoId() + 1,
-    nombre: nombre,
-    estado: false,
-  };
-  listaDeTareas.push(tareaNueva);
+  return new Promise((resolve, reject) => {
+    let tareaNueva = {
+      id: retornarUltimoId() + 1,
+      nombre: nombre,
+      estado: false,
+    };
+    listaDeTareas.push(tareaNueva);
+    resolve(tareaNueva);
+  });
 }
 
 //Función para eliminar una tarea(objeto) existente de la lista(array)
 function eliminarTarea(id) {
-  let indice = listaDeTareas.findIndex((objeto) => objeto.id === id);
+  return new Promise((resolve, reject) => {
+    let indice = listaDeTareas.findIndex((objeto) => objeto.id === id);
 
-  if (indice >= 0) {
-    listaDeTareas.splice(indice, 1);
-  } else {
-    console.log(`No se encontró la tarea, por favor verifica`);
-  }
+    if (indice >= 0) {
+      listaDeTareas.splice(indice, 1);
+      resolve(listaDeTareas);
+    } else {
+      reject(`No se encontró la tarea, por favor verifica`);
+    }
+  });
 }
 
 //Función para cambiar el estado de la tarea
 function cambiarEstadoTarea(id) {
-  listaDeTareas = listaDeTareas.map((tarea) => {
-    if (tarea.id === id) {
-      return {
-        ...tarea,
-        estado: !tarea.estado,
-      };
-    } else {
-      return tarea;
-    }
+  return new Promise((resolve, reject) => {
+    listaDeTareas = listaDeTareas.map((tarea) => {
+      if (tarea.id === id) {
+        return {
+          ...tarea,
+          estado: !tarea.estado,
+        };
+      } else {
+        return tarea;
+      }
+    });
+    resolve(listaDeTareas);
   });
 }
 
@@ -76,12 +85,13 @@ function preguntarAlUsuario() {
       break;
     case 1:
       let nuevaTarea = readlineSync.question("Cual es el nombre de la tarea? ");
-      agregarTarea(nuevaTarea);
-      console.log(
-        `Se ha agregado la tarea ${nuevaTarea} a la lista de tareas.`
-      );
-      imprimirListaDeTareas();
-      preguntarAlUsuario();
+      agregarTarea(nuevaTarea).then((response) => {
+        console.log(
+          `Se ha agregado la tarea ${nuevaTarea} a la lista de tareas.`
+        );
+        imprimirListaDeTareas();
+        preguntarAlUsuario();
+      });
       break;
     case 2:
       if (listaDeTareas.length > 0) {
@@ -93,16 +103,24 @@ function preguntarAlUsuario() {
         );
         if (indexTarea >= 0) {
           let nombreTareaEliminar = listaDeTareas[indexTarea].nombre;
-          eliminarTarea(listaDeTareas[indexTarea].id);
-          console.log(
-            `Se ha eliminado la tarea ${nombreTareaEliminar} de la lista de tareas.`
-          );
-          imprimirListaDeTareas();
+          eliminarTarea(listaDeTareas[indexTarea].id)
+            .then((response) => {
+              console.log(
+                `Se ha eliminado la tarea ${nombreTareaEliminar} de la lista de tareas.`
+              );
+              imprimirListaDeTareas();
+              preguntarAlUsuario();
+            })
+            .catch((error) => {
+              console.log(error);
+              preguntarAlUsuario();
+            });
         }
       } else {
         console.log("No tienes tareas para eliminar");
+        preguntarAlUsuario();
       }
-      preguntarAlUsuario();
+
       break;
     case 3:
       if (listaDeTareas.length > 0) {
