@@ -62,7 +62,7 @@ function cambiarEstadoTarea(id) {
   });
 }
 
-function preguntarAlUsuario() {
+async function preguntarAlUsuario() {
   let opciones = [
     "Imprimir lista de tareas",
     "Agregar una tarea",
@@ -132,7 +132,7 @@ function preguntarAlUsuario() {
         );
         if (indexTarea >= 0) {
           let nombreTareaEliminar = listaDeTareas[indexTarea].nombre;
-          cambiarEstadoTarea(listaDeTareas[indexTarea].id);
+          await cambiarEstadoTarea(listaDeTareas[indexTarea].id);
           console.log(
             `Se ha cambiado el estado de la tarea ${nombreTareaEliminar} satisfactoriamente.`
           );
