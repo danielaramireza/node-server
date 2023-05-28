@@ -1,24 +1,23 @@
-const http = require("http");
+const express = require("express");
+const app = express();
 const port = 3000;
-const host = "localhost";
+
+app.use(express.json());
 
 let listaTareas = [
-  { id: 1, descripcion: "Hacer el desayuno", estado: false },
-  { id: 2, descripcion: "Sacar la basura", estado: false },
-  { id: 3, descripcion: "Ir al supermercado", estado: false },
-  { id: 4, descripcion: "Pasear el perro", estado: false },
+  { id: 1, description: "Hacer el desayuno", isCompleted: false },
+  { id: 3, description: "Ir al supermercado", isCompleted: false },
+  { id: 2, description: "Sacar la basura", isCompleted: false },
+  { id: 4, description: "Pasear el perro", isCompleted: false },
 ];
 
-const server = http.createServer((req, res) => {
-  if (req.method === "GET" && req.url === "/") {
-    res.statusCode = 200;
-    res.end(JSON.stringify(listaTareas));
-  } else {
-    res.statusCode = 404;
-    res.end("Recurso no encontrado");
-  }
+app.get("/", (req, res) => {
+  res.send({
+    success: true,
+    content: listaTareas,
+  });
 });
 
-server.listen(port, host, () => {
-  console.log("Servidor encendido");
+app.listen(port, () => {
+  console.log("Servidor inicializado en " + port);
 });
