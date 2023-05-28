@@ -3,10 +3,10 @@ const port = 3000;
 const host = "localhost";
 
 let listaTareas = [
-  "Hacer el desayuno",
-  "Sacar la basura",
-  "Ir al supermercado",
-  "Pasear el perro",
+  { id: 1, descripcion: "Hacer el desayuno", estado: false },
+  { id: 2, descripcion: "Sacar la basura", estado: false },
+  { id: 3, descripcion: "Ir al supermercado", estado: false },
+  { id: 4, descripcion: "Pasear el perro", estado: false },
 ];
 
 const server = http.createServer((req, res) => {
